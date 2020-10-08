@@ -41,37 +41,72 @@ def print_directions(directions_str):
     print(".")
 
 
-def pull_a_lever(purse):
-    if purse[1] == True:
-        choice = input("Pull a lever (y/n): ")
-        if choice in YES:
-            purse[0] += 1
-            print("You received 1 coin, your total is now {}.".format(purse[0]))
+def pull_a_lever(purse, col, row):
+    if (col == 1 and row == 2):
+        if purse[1][0]:
+            choice = input("Pull a lever (y/n): ")
+            if choice in YES:
+                purse[0] += 1
+                print("You received 1 coin, your total is now {}.".format(purse[0]))
+                return purse
+            elif choice in NO:
+                return purse
+        else:
             return purse
-        elif choice in NO:
+    elif (col == 2 and row == 2):
+        if purse[1][1]:
+            choice = input("Pull a lever (y/n): ")
+            if choice in YES:
+                purse[0] += 1
+                print("You received 1 coin, your total is now {}.".format(purse[0]))
+                return purse
+            elif choice in NO:
+                return purse
+        else:
             return purse
-    else:
-        return purse
+    elif (col == 2 and row == 3):
+        if purse[1][2]:
+            choice = input("Pull a lever (y/n): ")
+            if choice in YES:
+                purse[0] += 1
+                print("You received 1 coin, your total is now {}.".format(purse[0]))
+                return purse
+            elif choice in NO:
+                return purse
+        else:
+            return purse
+    elif (col == 3 and row == 2):
+        if purse[1][3]:
+            choice = input("Pull a lever (y/n): ")
+            if choice in YES:
+                purse[0] += 1
+                print("You received 1 coin, your total is now {}.".format(purse[0]))
+                return purse
+            elif choice in NO:
+                return purse
+        else:
+            return purse
+
         
 def find_directions(col, row, purse):
     ''' Returns valid directions as a string given the supplied location '''
     if col == 1 and row == 1:   # (1,1)
         valid_directions = NORTH
     elif col == 1 and row == 2: # (1,2)
-        purse = pull_a_lever(purse)
+        purse = pull_a_lever(purse, col, row)
         valid_directions = NORTH+EAST+SOUTH
     elif col == 1 and row == 3: # (1,3)
         valid_directions = EAST+SOUTH
     elif col == 2 and row == 1: # (2,1)
         valid_directions = NORTH
     elif col == 2 and row == 2: # (2,2)
-        purse = pull_a_lever(purse)
+        purse = pull_a_lever(purse, col, row)
         valid_directions = SOUTH+WEST
     elif col == 2 and row == 3: # (2,3)
-        purse = pull_a_lever(purse)
+        purse = pull_a_lever(purse, col, row)
         valid_directions = EAST+WEST
     elif col == 3 and row == 2: # (3,2)
-        purse = pull_a_lever(purse)
+        purse = pull_a_lever(purse, col, row)
         valid_directions = NORTH+SOUTH
     elif col == 3 and row == 3: # (3,3)
         valid_directions = SOUTH+WEST
@@ -85,8 +120,14 @@ def play_one_move(col, row, valid_directions, purse):
     direction = direction.lower()
     
     if not direction in valid_directions:
-        if (col == 1 and row == 2) or (col == 2 and row == 2) or (col == 2 and row == 3) or (col == 3 and row == 2):
-            purse[1] = False
+        if (col == 1 and row == 2):
+            purse[1][0] = False
+        elif (col == 2 and row == 2):
+            purse[1][1] = False
+        elif (col == 2 and row == 3):
+            purse[1][2] = False
+        elif (col == 3 and row == 2):
+            purse[1][3] = False
 
         print("Not a valid direction!")
     else:
@@ -94,14 +135,24 @@ def play_one_move(col, row, valid_directions, purse):
         victory = is_victory(col, row)
     return victory, col, row, purse
 
-# The main program starts here
-victory = False
-purse = [0,True]
-row = 1
-col = 1
+def main():
+    victory = False
+    purse = [0, [True, True, True, True]]
+    row = 1
+    col = 1
 
-while not victory:
-    valid_directions, purse = find_directions(col, row, purse)
-    print_directions(valid_directions)
-    victory, col, row, purse = play_one_move(col, row, valid_directions, purse)
-print("Victory! Total coins {}.".format(purse[0]))
+    while not victory:
+        valid_directions, purse = find_directions(col, row, purse)
+        print_directions(valid_directions)
+        victory, col, row, purse = play_one_move(col, row, valid_directions, purse)
+    print("Victory! Total coins {}.".format(purse[0]))
+
+def play():
+    play_choice = input("Play again (y/n): ")
+    while play_choice in YES:
+        main()
+        play_choice = input("Play again (y/n): ")
+
+# The main program starts here
+main()
+play()
