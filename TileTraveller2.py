@@ -1,10 +1,11 @@
+import random
 # Constants
 NORTH = 'n'
 EAST = 'e'
 SOUTH = 's'
 WEST = 'w'
-YES = ('y', 'Y')
-NO = ('n', 'N')
+YES = 'y'
+NO =  'n'
 COUNTER_LIST = [True, 0]
 
 def move(direction, col, row):
@@ -40,11 +41,17 @@ def print_directions(directions_str):
         first = False
     print(".")
 
+"""
+    direction = random.choice([NORTH, EAST, SOUTH, WEST])
+    print("Direction:", direction.lower())
+    """
 
 def pull_a_lever(purse, col, row):
     if (col == 1 and row == 2):
         if purse[1][0]:
-            choice = input("Pull a lever (y/n): ")
+            choice = random.choice([YES, NO])
+            print("Pull a lever (y/n):", choice.lower())
+            
             if choice in YES:
                 purse[0] += 1
                 print("You received 1 coin, your total is now {}.".format(purse[0]))
@@ -55,7 +62,8 @@ def pull_a_lever(purse, col, row):
             return purse
     elif (col == 2 and row == 2):
         if purse[1][1]:
-            choice = input("Pull a lever (y/n): ")
+            choice = random.choice([YES, NO])
+            print("Pull a lever (y/n):", choice.lower())
             if choice in YES:
                 purse[0] += 1
                 print("You received 1 coin, your total is now {}.".format(purse[0]))
@@ -66,7 +74,8 @@ def pull_a_lever(purse, col, row):
             return purse
     elif (col == 2 and row == 3):
         if purse[1][2]:
-            choice = input("Pull a lever (y/n): ")
+            choice = random.choice([YES, NO])
+            print("Pull a lever (y/n):", choice.lower())
             if choice in YES:
                 purse[0] += 1
                 print("You received 1 coin, your total is now {}.".format(purse[0]))
@@ -77,7 +86,8 @@ def pull_a_lever(purse, col, row):
             return purse
     elif (col == 3 and row == 2):
         if purse[1][3]:
-            choice = input("Pull a lever (y/n): ")
+            choice = random.choice([YES, NO])
+            print("Pull a lever (y/n):", choice.lower())
             if choice in YES:
                 purse[0] += 1
                 print("You received 1 coin, your total is now {}.".format(purse[0]))
@@ -86,6 +96,7 @@ def pull_a_lever(purse, col, row):
                 return purse
         else:
             return purse
+    return purse
 
         
 def find_directions(col, row, purse):
@@ -116,8 +127,9 @@ def play_one_move(col, row, valid_directions, purse):
     ''' Plays one move of the game
         Return if victory has been obtained and updated col,row '''
     victory = False
-    direction = input("Direction: ")
-    direction = direction.lower()
+    
+    direction = random.choice([NORTH, EAST, SOUTH, WEST])
+    print("Direction:", direction.lower())
     
     if not direction in valid_directions:
         if (col == 1 and row == 2):
@@ -133,19 +145,24 @@ def play_one_move(col, row, valid_directions, purse):
     else:
         col, row = move(direction, col, row)
         victory = is_victory(col, row)
+        purse[1] = [True, True, True, True]
+
+    purse[2] += 1
     return victory, col, row, purse
 
 def main():
     victory = False
-    purse = [0, [True, True, True, True]]
+    purse = [0, [True, True, True, True], 0]
     row = 1
     col = 1
+    seed = int(input("Input seed: "))
+    random.seed(seed)
 
     while not victory:
         valid_directions, purse = find_directions(col, row, purse)
         print_directions(valid_directions)
         victory, col, row, purse = play_one_move(col, row, valid_directions, purse)
-    print("Victory! Total coins {}.".format(purse[0]))
+    print("Victory! Total coins {}. Moves {}.".format(purse[0],purse[2]))
 
 def play():
     play_choice = input("Play again (y/n): ")
